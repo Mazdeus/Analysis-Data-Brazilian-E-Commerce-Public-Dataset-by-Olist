@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import streamlit as st
+import os
 from babel.numbers import format_currency
 sns.set(style = "dark")
 
@@ -46,7 +47,10 @@ def create_bystate_df(df):
     return bycity_df
 
 # Load berkas all_data.csv
-all_df = pd.read_csv("all_data.csv")
+# Mendapatkan path absolut ke direktori dashboard
+current_dir = os.path.dirname(os.path.abspath(__file__))
+csv_path = os.path.join(current_dir, "all_data.csv")
+all_df = pd.read_csv(csv_path)
 
 # Mengurutkan dataframe berdasarkan order_purchase_timestamp_x
 datetime_columns = ["order_purchase_timestamp_x"]
@@ -64,7 +68,8 @@ max_date = all_df["order_purchase_timestamp_x"].max()
 
 with st.sidebar:
     # Menambahkan logo
-    st.image("logo_olist_store.png", width=200)
+    logo_path = os.path.join(current_dir, "logo_olist_store.png")
+    st.image(logo_path, width=200)
 
     for i in range(10):
         st.write("")
