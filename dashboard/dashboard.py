@@ -26,7 +26,7 @@ def create_daily_orders_df(df):
 
 # Menjumlahkan order kategori produk
 def create_sum_order_category_df(df):
-    sum_order_category_df = all_df.groupby(by = "product_category_name_english").order_id.nunique().sort_values(ascending = False).reset_index()
+    sum_order_category_df = df.groupby(by = "product_category_name_english").order_id.nunique().sort_values(ascending = False).reset_index()
     sum_order_category_df.rename(columns = {
         "order_id" : "order_count",
         "product_category_name_english" : "category"
@@ -37,7 +37,7 @@ def create_sum_order_category_df(df):
 
 # Menyiapkan demografi pelanggan
 def create_bystate_df(df):
-    bycity_df = all_df.groupby(by = "customer_state").customer_unique_id.nunique().reset_index()
+    bycity_df = df.groupby(by = "customer_state").customer_unique_id.nunique().reset_index()
 
     bycity_df.rename(columns = {
         "customer_unique_id" : "customer_count",
@@ -91,33 +91,6 @@ bystate_df = create_bystate_df(main_df)
 
 # 4. Melengkapi Dashboard
 st.header("Brazilian E-Commerce Dashboard :sparkles:")
-
-# menampilkan tiga informasi terkait daily orders, yaitu jumlah order harian serta total order dan revenue dalam range waktu tertentu. 
-st.subheader('Daily Orders')
-
-col1, col2 = st.columns(2)
-
-with col1:
-    total_orders = daily_orders_df["order_count"].sum()
-    st.metric("Total Orders", value = total_orders)
-
-with col2:
-    total_revenue = format_currency(daily_orders_df.revenue.sum(), "BRL", locale = "pt_BR")
-    st.metric("Total Revenue", value = total_revenue)
-
-fig, ax = plt.subplots(figsize = (16, 8))
-ax.plot(
-    daily_orders_df["order_purchase_timestamp_x"],
-    daily_orders_df["order_count"],
-    marker = "o",
-    linewidth = 2,
-    color = "#90CAF9"
-)
-
-ax.tick_params(axis = 'y', labelsize = 20)
-ax.tick_params(axis = 'x', labelsize = 15)
-
-st.pyplot(fig)
 
 # Informasi penjualan kategori produk
 st.subheader("Best and Worst Selling Categories")
